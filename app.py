@@ -83,6 +83,7 @@ def gemini():
         f'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={chave}',
         json={'contents': [{'parts': [{'text': prompt}]}]}
     )
-    return resposta.json()
+     return resposta.json()
+    
 if __name__ == '__main__':
     app.run(debug=True)
