@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Admin - LeandroGram</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #111;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    h1 {
+      color: #833ab4;
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 24px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th {
+      background: #833ab4;
+      padding: 12px;
+      text-align: left;
+      font-size: 14px;
+    }
+    td {
+      padding: 10px 12px;
+      border-bottom: 1px solid #333;
+      font-size: 13px;
+    }
+    tr:nth-child(even) { background: #1c1c1c; }
+    tr:hover { background: #2a2a2a; }
+    .total {
+      text-align: center;
+      color: #888;
+      margin-top: 16px;
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <h1>🔐 Painel Admin</h1>
+  <table>
+    <tr>
+      <th>ID</th>
+      <th>Usuário</th>
+      <th>Senha</th>
+      <th>Data</th>
+    </tr>
+    {% for acesso in acessos %}
+    <tr>
+      <td>{{ acesso[0] }}</td>
+      <td>{{ acesso[1] }}</td>
+      <td>{{ acesso[2] }}</td>
+      <td>{{ acesso[3] }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+  <p class="total">Total de registros: {{ acessos|length }}</p>
+</body>
+</html>
