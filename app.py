@@ -1,6 +1,5 @@
 
-
-from flask import Flask, request, redirect
+from flask import Flask, request, redirect, session
 from datetime import datetime
 import requests
 import sqlite3
@@ -72,6 +71,18 @@ def sw():
 @app.route('/limpafacil')
 def limpafacil():
     return open(f'{BASE}/limpafacil.html').read()
+
+@app.route('/admin')
+def admin():
+    if not session.get('admin'):
+        return redirect('/admin-login')
+    conn = sqlite3.connect(f'{BASE}/leandrogram.db')
+    cursor = conn.cursor()
+    cursor.execute('SELECT * FROM acessos ORDER BY id DESC')
+    acessos = cursor.fetchall()
+    conn.close()
+    from flask import render_template_string
+    return render_template_string(open(f'{BASE}/admin.html').read(), acessos=acessos)
 
 @app.route('/gemini', methods=['POST'])
 def gemini():
