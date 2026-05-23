@@ -6,6 +6,8 @@ import requests
 import sqlite3
 import os
 
+from dotenv import load_dotenv
+load_dotenv()
 app = Flask(__name__)
 
 BASE = '/home/leandrogram/Leandrogram'
