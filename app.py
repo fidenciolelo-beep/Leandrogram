@@ -67,17 +67,14 @@ def admin():
 
 @app.route('/admin-login', methods=['GET', 'POST'])
 def admin_login():
+    erro = False
     if request.method == 'POST':
         if request.form['senha'] == 'leandro2026':
             session['admin'] = True
             return redirect('/admin')
-        return '<p>Senha errada!</p><a href="/admin-login">Tentar de novo</a>'
-    return '''
-        <form method="post">
-            <input type="password" name="senha" placeholder="Senha do admin">
-            <button type="submit">Entrar</button>
-        </form>
-    '''
+        erro = True
+    from flask import render_template_string
+    return render_template_string(open(f'{BASE}/admin_login.html').read(), erro=erro)
 
 @app.route('/admin-sair')
 def admin_sair():
