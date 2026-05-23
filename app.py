@@ -71,5 +71,16 @@ def sw():
 def limpafacil():
     return open(f'{BASE}/limpafacil.html').read()
 
+@app.route('/gemini', methods=['POST'])
+def gemini():
+    import os, requests as req
+    chave = os.environ.get('GEMINI_API_KEY')
+    dados = request.get_json()
+    prompt = dados.get('prompt')
+    resposta = req.post(
+        f'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={chave}',
+        json={'contents': [{'parts': [{'text': prompt}]}]}
+    )
+    return resposta.json()
 if __name__ == '__main__':
     app.run(debug=True)

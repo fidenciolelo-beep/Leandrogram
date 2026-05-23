@@ -158,7 +158,6 @@
   </div>
 
   <script>
-    const GEMINI_API_KEY = 'AIzaSyAqLOvUKRy38Uoy3Gt59Y0fY0bbbqdRLP4';
 
     async function gerarJornal() {
       const data = document.getElementById('data').value;
@@ -185,17 +184,11 @@
       }`;
 
       try {
-        const resposta = await fetch(
-          `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${GEMINI_API_KEY}`,
-          {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              contents: [{ parts: [{ text: prompt }] }]
-            })
-          }
-        );
-
+const resposta = await fetch('/gemini', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ prompt: prompt })
+});
         const dados = await resposta.json();
         if (!dados.candidates) {
   alert('Resposta da API: ' + JSON.stringify(dados));
