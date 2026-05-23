@@ -70,4 +70,5 @@ def sw():
 def limpafacil():
     return open('limpafacil.html').read()
 
-app.run(debug=True)
+if __name__ == '__main__':
+    app.run(debug=True)
