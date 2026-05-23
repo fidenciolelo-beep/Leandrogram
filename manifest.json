@@ -1,0 +1,16 @@
+{
+  "name": "LimpaFácil",
+  "short_name": "LimpaFácil",
+  "description": "Encontra e remove fotos duplicadas",
+  "start_url": "/limpafacil",
+  "display": "standalone",
+  "background_color": "#111111",
+  "theme_color": "#833ab4",
+  "icons": [
+    {
+      "src": "https://via.placeholder.com/192x192/833ab4/ffffff?text=LF",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+}

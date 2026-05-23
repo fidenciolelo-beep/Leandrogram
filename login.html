@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Leandro Gram</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #000;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    .card {
+      width: 350px;
+      background: #121212;
+      border: 1px solid #363636;
+      padding: 40px;
+      text-align: center;
+      margin-bottom: 12px;
+      border-radius: 8px;
+    }
+
+    .logo {
+      font-size: 36px;
+      font-family: cursive;
+      color: #fff;
+      margin-bottom: 6px;
+      animation: brilho 2s infinite alternate;
+    }
+
+    .subtitulo {
+      font-size: 12px;
+      color: #8e8e8e;
+      margin-bottom: 24px;
+      font-style: italic;
+    }
+
+    @keyframes brilho {
+      from { text-shadow: 0 0 5px #833ab4; }
+      to { text-shadow: 0 0 20px #fd1d1d, 0 0 40px #fcb045; }
+    }
+
+    input {
+      width: 100%;
+      background: #1c1c1c;
+      border: 1px solid #363636;
+      border-radius: 4px;
+      padding: 10px;
+      font-size: 13px;
+      margin-bottom: 10px;
+      color: #fff;
+      outline: none;
+      transition: border 0.3s;
+    }
+
+    input:focus {
+      border: 1px solid #833ab4;
+    }
+
+    button {
+      width: 100%;
+      background: linear-gradient(45deg, #833ab4, #fd1d1d, #fcb045);
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      padding: 10px;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-bottom: 16px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    button:hover {
+      transform: scale(1.03);
+      box-shadow: 0 0 15px #833ab4;
+    }
+
+    button:active {
+      transform: scale(0.97);
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .divider hr {
+      flex: 1;
+      border: none;
+      border-top: 1px solid #363636;
+    }
+
+    .divider span {
+      font-size: 13px;
+      font-weight: bold;
+      color: #8e8e8e;
+    }
+
+    .facebook {
+      color: #4a9fd5;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .facebook:hover { text-decoration: underline; }
+
+    .forgot {
+      display: block;
+      margin-top: 16px;
+      font-size: 12px;
+      color: #8e8e8e;
+      text-decoration: none;
+    }
+
+    .forgot:hover { color: #fff; }
+
+    .card2 {
+      width: 350px;
+      background: #121212;
+      border: 1px solid #363636;
+      border-radius: 8px;
+      padding: 20px;
+      text-align: center;
+      font-size: 14px;
+      color: #8e8e8e;
+    }
+
+    .card2 a {
+      color: #833ab4;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    .card2 a:hover { text-decoration: underline; }
+
+    .mensagem-erro {
+      color: #fd1d1d;
+      font-size: 13px;
+      margin-bottom: 10px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <div class="logo">LeandroGram</div>
+    <div class="subtitulo">Só entra quem merece 😎</div>
+
+    <div class="mensagem-erro" id="erro"></div>
+
+    <form action="/entrar" method="POST">
+      <input type="text" name="usuario" placeholder="Seu @ ou email (sem desculpa)">
+      <input type="password" name="senha" placeholder="Senha (não tenta adivinhar)">
+      <button type="submit">🚀 Me deixa entrar!</button>
+    </form>
+
+    <div class="divider">
+      <hr><span>OU</span><hr>
+    </div>
+
+    <a href="#" class="facebook">😅 Entrar pelo Facebook (corajoso...)</a>
+    <a href="#" class="forgot">🤔 Esqueceu a senha? Que vergonha...</a>
+  </div>
+
+  <div class="card2">
+    Ainda não tem conta aqui? <a href="#">Corre se cadastrar antes que feche! 😂</a>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('erro') === '1') {
+      const erro = document.getElementById('erro');
+      erro.style.display = 'block';
+      erro.textContent = '❌ Errou feio! Usuário ou senha tão errados que dói...';
+    }
+    if (params.get('sucesso') === '1') {
+      const erro = document.getElementById('erro');
+      erro.style.display = 'block';
+      erro.style.color = '#fcb045';
+      erro.textContent = '🎉 Uhuul! Bem-vindo ao LeandroGram!';
+    }
+  </script>
+
+</body>
+</html>

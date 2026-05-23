@@ -1,0 +1,7 @@
+# HSTS 1.0 Known Hosts database for GNU Wget.
+# Edit at your own risk.
+# <hostname>	<port>	<incl. subdomains>	<created>	<max-age>
+bin.equinox.io	0	1	1779466870	31536000
+ngrok.com	0	1	1779426688	63072000
+equinox.io	0	1	1779426688	31536000
+localtonet.com	0	0	1779467782	2592000

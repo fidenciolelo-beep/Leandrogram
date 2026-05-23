@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Jornal do Dia que Você Nasceu</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #111;
+      font-family: 'Georgia', serif;
+      color: #f0f0f0;
+      padding: 20px;
+    }
+    .topo {
+      text-align: center;
+      border-bottom: 3px double #c9a84c;
+      padding-bottom: 20px;
+      margin-bottom: 30px;
+    }
+    .nome-jornal {
+      font-size: 48px;
+      color: #c9a84c;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+    }
+    .subtitulo {
+      font-size: 14px;
+      color: #888;
+      margin-top: 8px;
+      letter-spacing: 2px;
+    }
+    .formulario {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .formulario input {
+      background: #1c1c1c;
+      border: 1px solid #c9a84c;
+      color: #fff;
+      padding: 10px 20px;
+      font-size: 16px;
+      border-radius: 4px;
+      margin-right: 10px;
+    }
+    .formulario button {
+      background: #c9a84c;
+      color: #111;
+      border: none;
+      padding: 10px 24px;
+      font-size: 16px;
+      font-weight: bold;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .formulario button:hover { transform: scale(1.05); }
+    .jornal {
+      max-width: 800px;
+      margin: 0 auto;
+      display: none;
+    }
+    .manchete {
+      font-size: 32px;
+      color: #c9a84c;
+      text-align: center;
+      border-bottom: 1px solid #c9a84c;
+      padding-bottom: 16px;
+      margin-bottom: 24px;
+    }
+    .secao {
+      background: #1c1c1c;
+      border: 1px solid #333;
+      border-radius: 6px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    .secao h2 {
+      color: #c9a84c;
+      font-size: 18px;
+      margin-bottom: 12px;
+      border-bottom: 1px solid #333;
+      padding-bottom: 8px;
+    }
+    .secao p {
+      line-height: 1.8;
+      color: #ccc;
+      font-size: 15px;
+    }
+    .btn-imprimir {
+      display: block;
+      width: 200px;
+      margin: 20px auto;
+      background: #c9a84c;
+      color: #111;
+      border: none;
+      padding: 12px;
+      font-size: 16px;
+      font-weight: bold;
+      border-radius: 4px;
+      cursor: pointer;
+      text-align: center;
+    }
+    .carregando {
+      text-align: center;
+      color: #c9a84c;
+      font-size: 18px;
+      display: none;
+      margin: 20px 0;
+    }
+    @media print {
+      body { background: #fff; color: #000; }
+      .formulario, .btn-imprimir { display: none; }
+      .jornal { display: block !important; }
+      .secao { background: #fff; border: 1px solid #000; }
+      .manchete, .secao h2, .nome-jornal { color: #000; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="topo">
+    <div class="nome-jornal">📰 LeandroGram News</div>
+    <div class="subtitulo">O jornal do dia em que você nasceu</div>
+  </div>
+
+  <div class="formulario">
+    <input type="date" id="data" />
+    <button onclick="gerarJornal()">Gerar meu jornal!</button>
+  </div>
+
+  <div class="carregando" id="carregando">
+    ⏳ Buscando informações do seu dia especial...
+  </div>
+
+  <div class="jornal" id="jornal">
+    <div class="manchete" id="manchete"></div>
+    <div class="secao">
+      <h2>🌍 Acontecimentos Históricos</h2>
+      <p id="historico"></p>
+    </div>
+    <div class="secao">
+      <h2>🎬 Cultura e Entretenimento</h2>
+      <p id="cultura"></p>
+    </div>
+    <div class="secao">
+      <h2>⚽ Esportes</h2>
+      <p id="esportes"></p>
+    </div>
+    <div class="secao">
+      <h2>🔬 Ciência e Tecnologia</h2>
+      <p id="ciencia"></p>
+    </div>
+    <div class="secao">
+      <h2>✨ Curiosidades do Dia</h2>
+      <p id="curiosidades"></p>
+    </div>
+    <button class="btn-imprimir" onclick="window.print()">🖨️ Imprimir Jornal</button>
+  </div>
+
+  <script>
+    const GEMINI_API_KEY = 'AIzaSyCXkrAZIQ6-rvJa-4bJD4hl7Ntl9dQGzlM';
+
+    async function gerarJornal() {
+      const data = document.getElementById('data').value;
+      if (!data) {
+        alert('Escolhe uma data primeiro!');
+        return;
+      }
+
+      const partes = data.split('-');
+      const dataFormatada = `${partes[2]}/${partes[1]}/${partes[0]}`;
+
+      document.getElementById('carregando').style.display = 'block';
+      document.getElementById('jornal').style.display = 'none';
+
+      const prompt = `Você é um jornalista histórico. Gere um jornal detalhado e real sobre o dia ${dataFormatada}. 
+      Responda APENAS em JSON, sem explicações, neste formato exato:
+      {
+        "manchete": "título principal do dia",
+        "historico": "principais acontecimentos históricos deste dia",
+        "cultura": "filmes, músicas, livros e entretenimento da época",
+        "esportes": "eventos esportivos importantes deste dia ou época",
+        "ciencia": "descobertas científicas e tecnológicas do período",
+        "curiosidades": "fatos curiosos e interessantes sobre este dia"
+      }`;
+
+      try {
+        const resposta = await fetch(
+          `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`,
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              contents: [{ parts: [{ text: prompt }] }]
+            })
+          }
+        );
+
+        const dados = await resposta.json();
+        if (!dados.candidates) {
+  alert('Resposta da API: ' + JSON.stringify(dados));
+  return;
+}
+const texto = dados.candidates[0].content.parts[0].text;
+        const limpo = texto.replace(/```json|```/g, '').trim();
+        const jornal = JSON.parse(limpo);
+
+        document.getElementById('manchete').textContent = `📅 ${dataFormatada} — ${jornal.manchete}`;
+        document.getElementById('historico').textContent = jornal.historico;
+        document.getElementById('cultura').textContent = jornal.cultura;
+        document.getElementById('esportes').textContent = jornal.esportes;
+        document.getElementById('ciencia').textContent = jornal.ciencia;
+        document.getElementById('curiosidades').textContent = jornal.curiosidades;
+
+        document.getElementById('carregando').style.display = 'none';
+        document.getElementById('jornal').style.display = 'block';
+
+      } catch(e) {
+        document.getElementById('carregando').style.display = 'none';
+        alert('Erro: ' + e.message + ' | ' + JSON.stringify(e));
+      }
+    }
+  </script>
+
+</body>
+</html>
