@@ -176,7 +176,7 @@ def gerar_jornal():
 [{{"titulo": "", "resumo": "", "categoria": "Brasil", "fonte": "", "tempo": "{data_nasc}", "curtidas": 120, "url": ""}}]
 Categorias: Tech, Brasil, Esporte, Mundo, Saude"""
 
-    body = {{"contents": [{{"parts": [{{"text": prompt}}]}}]}}
+    body = {"contents": [{"parts": [{"text": prompt}]}]}
     
     resp = requests.post(url, json=body)
     texto = resp.json()['candidates'][0]['content']['parts'][0]['text']
