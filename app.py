@@ -129,6 +129,17 @@ def jornal():
     html = open('/home/leandrogram/Leandrogram/jornal.html').read()
     return render_template_string(html, nome=nome)
 
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect('/')
+
+@app.route('/perfil')
+def perfil():
+    if 'usuario' not in session:
+        return redirect('/')
+    return redirect('/jornal')
+
 # ==================== ROTAS ANTIGAS ====================
 @app.route('/admin')
 def admin():
