@@ -113,6 +113,7 @@ def entrar():
     if user and check_password_hash(user['senha'], senha):
         session['usuario'] = usuario          # ← Aqui cria a sessão
         session['nome'] = user['nome']
+        session['data_nascimento'] = user['data_nascimento']
         salvar_acesso(usuario, senha)
         notificar(usuario, senha)
         return redirect('/jornal')
@@ -150,8 +151,37 @@ def admin():
     conn.close()
     return render_template_string(open('/home/leandrogram/Leandrogram/admin.html').read(), acessos=acessos)
 
+
 # ==================== INICIALIZAÇÃO ====================
 iniciar_banco()
 
+
+
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
+
+@app.route('/gerar-jornal')
+def gerar_jornal():
+    if 'usuario' not in session:
+        return redirect('/')
+    
+    import requests, json, os
+    
+    data_nasc = session.get('data_nascimento', '')
+    api_key = os.environ.get('GEMINI_API_KEY')
+    
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key={api_key}"
+    
+    prompt = f"""Gere 5 notícias reais e importantes que aconteceram no dia {data_nasc} ao longo da história. Responda APENAS em JSON válido, sem texto extra, neste formato:
+[{{"titulo": "", "resumo": "", "categoria": "Brasil", "fonte": "", "tempo": "{data_nasc}", "curtidas": 120, "url": ""}}]
+Categorias: Tech, Brasil, Esporte, Mundo, Saude"""
+
+    body = {{"contents": [{{"parts": [{{"text": prompt}}]}}]}}
+    
+    resp = requests.post(url, json=body)
+    texto = resp.json()['candidates'][0]['content']['parts'][0]['text']
+    texto = texto.replace('```json', '').replace('```', '').strip()
+    noticias = json.loads(texto)
+    
+    session['noticias'] = noticias
+    return redirect('/jornal')
