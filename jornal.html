@@ -1,149 +1,121 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LeandroGram News</title>
+    <title>Jornal - LeandroGram</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
         body {
-            background: #0a0a0a;
+            background: #000;
+            color: #e0e0e0;
             font-family: Arial, sans-serif;
-            color: #f0f0f0;
             min-height: 100vh;
+        }
+        .header {
+            background: #121212;
             padding: 20px;
-        }
-        .topo {
             text-align: center;
-            border-bottom: 3px solid;
-            border-image: linear-gradient(45deg, #9b59b6, #e74c3c, #e67e22) 1;
-            padding-bottom: 20px;
-            margin-bottom: 30px;
+            border-bottom: 1px solid #363636;
+            position: relative;
         }
-        .nome-jornal {
+        .logo {
             font-size: 32px;
-            font-weight: bold;
-            background: linear-gradient(45deg, #9b59b6, #e74c3c, #e67e22);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            letter-spacing: 4px;
-            text-transform: uppercase;
-        }
-        .subtitulo {
-            color: #666;
-            font-size: 14px;
-            margin-top: 8px;
-            letter-spacing: 2px;
-        }
-        .formulario {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        .formulario input {
-            background: #1a1a1a;
-            border: 1px solid #9b59b6;
+            font-family: cursive;
             color: #fff;
-            padding: 10px 20px;
-            font-size: 16px;
-            border-radius: 8px;
-            margin-right: 10px;
-            outline: none;
+            margin-bottom: 5px;
+            animation: brilho 2s infinite alternate;
         }
-        .formulario button {
-            background: linear-gradient(45deg, #9b59b6, #e74c3c);
-            color: white;
-            border: none;
-            padding: 10px 24px;
-            font-size: 16px;
-            font-weight: bold;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-        .formulario button:hover { transform: scale(1.05); }
-        .carregando {
-            display: none;
-            text-align: center;
-            padding: 40px;
-            color: #9b59b6;
+        .welcome {
+            color: #bb86fc;
             font-size: 18px;
+            margin: 10px 0;
         }
-        .spinner {
-            width: 40px;
-            height: 40px;
-            border: 4px solid #333;
-            border-top: 4px solid #9b59b6;
-            border-radius: 50%;
-            animation: girar 1s linear infinite;
-            margin: 0 auto 16px;
-        }
-        @keyframes girar {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        .jornal {
+        .container {
             max-width: 800px;
             margin: 0 auto;
-            display: none;
-        }
-        .manchete {
-            font-size: 28px;
-            font-weight: bold;
-            text-align: center;
-            background: linear-gradient(45deg, #9b59b6, #e74c3c, #e67e22);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            border-bottom: 1px solid #333;
-            padding-bottom: 16px;
-            margin-bottom: 24px;
-        }
-        .secao {
-            background: #1a1a1a;
-            border: 1px solid #333;
-            border-left: 4px solid #9b59b6;
-            border-radius: 8px;
             padding: 20px;
-            margin-bottom: 16px;
         }
-        .secao h2 {
-            background: linear-gradient(45deg, #9b59b6, #e74c3c);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            font-size: 18px;
-            margin-bottom: 12px;
+        .news-area {
+            background: #121212;
+            border: 1px solid #363636;
+            border-radius: 8px;
+            padding: 25px;
+            min-height: 60vh;
         }
-        .secao p {
-            color: #ccc;
-            line-height: 1.6;
-        }
-        .btn-imprimir {
-            display: block;
-            margin: 20px auto;
-            background: linear-gradient(45deg, #9b59b6, #e74c3c);
+        button {
+            width: 100%;
+            max-width: 350px;
+            background: linear-gradient(45deg, #833ab4, #fd1d1d, #fcb045);
             color: white;
             border: none;
-            padding: 12px 30px;
+            padding: 14px;
+            border-radius: 6px;
             font-size: 16px;
             font-weight: bold;
-            border-radius: 8px;
             cursor: pointer;
+            margin: 20px auto;
+            display: block;
+        }
+        button:hover {
+            transform: scale(1.03);
+        }
+        .logout {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: #ff6666;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        @keyframes brilho {
+            from { text-shadow: 0 0 5px #833ab4; }
+            to { text-shadow: 0 0 20px #fd1d1d, 0 0 40px #fcb045; }
         }
     </style>
 </head>
 <body>
-    <div class="topo">
-        <div class="nome-jornal">📰 LeandroGram News</div>
-        <div class="subtitulo">O jornal do dia em que você nasceu</div>
+    <div class="header">
+        <h1 class="logo">LeandroGram</h1>
+        <h2 class="welcome">Bem-vindo, {{ nome }}! 👋</h2>
+        <p>Seu jornal personalizado do dia</p>
+        <a href="/logout" class="logout">Sair</a>
     </div>
 
-    <div class="formulario">
-        <input type="date" id="data">
-        <button onclick="gerarJornal()">Gerar meu jornal!</button>
+    <div class="container">
+        <div class="news-area" id="jornal-content">
+            <p style="text-align: center; color: #888; margin-top: 50px;">
+                Clique no botão abaixo para gerar seu jornal personalizado
+            </p>
+        </div>
+
+        <button onclick="gerarJornal()">📬 Gerar meu jornal!</button>
     </div>
 
-    <div class="carregando" id="carregando">
-        <div class="spinner"></div>
-        Buscando infor
-git add jornal.html
-git commit -m "jornal com visual estilo LeandroGram"
-git push
+    <script>
+        function gerarJornal() {
+            const content = document.getElementById('jornal-content');
+            content.innerHTML = `
+                <p style="text-align: center; color: #bb86fc;">
+                    Gerando seu jornal personalizado...<br>
+                    <small>Aguarde um momento</small>
+                </p>
+            `;
+            // Aqui você pode integrar com sua API do Gemini depois
+            setTimeout(() => {
+                content.innerHTML = `
+                    <h2 style="color: #fff; text-align: center;">📰 Seu Jornal Personalizado</h2>
+                    <p style="margin-top: 30px; text-align: center; color: #aaa;">
+                        Aqui aparecerá o conteúdo gerado pelo Gemini.<br>
+                        (Vamos configurar isso em breve)
+                    </p>
+                `;
+            }, 1500);
+        }
+    </script>
+</body>
+</html>

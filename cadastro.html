@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LeandroGram</title>
+    <title>Cadastro - LeandroGram</title>
     <style>
         * {
             margin: 0;
@@ -78,7 +78,6 @@
             margin-top: 20px;
             display: block;
         }
-        /* Mensagem de feedback */
         #feedback {
             margin: 15px 0;
             padding: 15px;
@@ -95,42 +94,30 @@
 <body>
     <div class="card">
         <h1 class="logo">LeandroGram</h1>
-        <p class="subtitulo">Só entra quem merece 😎</p>
+        <p class="subtitulo">Crie sua conta agora 🔥</p>
 
-        <!-- MENSAGEM DE FEEDBACK -->
+        <!-- Feedback -->
         <div id="feedback"></div>
 
-        <form action="/entrar" method="POST">
-            <input type="text" name="usuario" placeholder="Seu @ ou email (sem desculpa)" required>
-            <input type="password" name="senha" placeholder="Senha (não tenta adivinhar)" required>
-            <button type="submit">Me deixa entrar!</button>
+        <form action="/registrar" method="POST">
+            <input type="text" name="usuario" placeholder="Escolha um nome de usuário" required>
+            <input type="text" name="nome" placeholder="Seu nome completo">
+            <input type="date" name="data_nascimento">
+            <input type="password" name="senha" placeholder="Crie uma senha forte" required>
+            <button type="submit">Cadastrar Conta</button>
         </form>
 
         <p style="margin: 20px 0; color: #8e8e8e;">OU</p>
         
-        <a href="#" class="link">🌟 Entrar pelo Facebook (corajoso...)</a>
-        <a href="#" class="link" style="margin-top: 10px;">😢 Esqueceu a senha? Que vergonha...</a>
-
-        <hr style="margin: 25px 0; border: 1px solid #363636;">
-        
-        <p>Ainda não tem conta aqui? 
-            <a href="/cadastro" style="color: #bb86fc; font-weight: bold;">Corre se cadastrar antes que feche! 🔥</a>
-        </p>
+        <a href="/" class="link">← Já tenho conta? Fazer Login</a>
     </div>
 
     <script>
-        // Mostra mensagens de sucesso ou erro
         const params = new URLSearchParams(window.location.search);
         const feedback = document.getElementById('feedback');
 
-        if (params.get('cadastro') === 'sucesso') {
-            feedback.innerHTML = '✅ Cadastro realizado com sucesso! Agora faça login.';
-            feedback.style.backgroundColor = '#1a3c1a';
-            feedback.style.color = '#00ff88';
-            feedback.style.display = 'block';
-        } 
-        else if (params.get('erro')) {
-            feedback.innerHTML = '❌ Usuário ou senha incorretos. Tente novamente.';
+        if (params.get('erro') === 'usuario_existente') {
+            feedback.innerHTML = '❌ Este nome de usuário já existe. Escolha outro.';
             feedback.style.backgroundColor = '#3c1a1a';
             feedback.style.color = '#ff6666';
             feedback.style.display = 'block';
@@ -138,3 +125,4 @@
     </script>
 </body>
 </html>
+
