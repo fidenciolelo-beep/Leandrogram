@@ -60,7 +60,7 @@ def login():
     
     cadastro_sucesso = request.args.get('cadastro') == 'sucesso'
     erro_login = request.args.get('erro') is not None
-    return render_template_string(open('login.html').read(), 
+    return render_template_string(open('/home/leandrogram/Leandrogram/login.html').read(), 
                                   cadastro_sucesso=cadastro_sucesso, 
                                   erro_login=erro_login)
 
@@ -69,7 +69,7 @@ def cadastro_page():
     if 'usuario' in session:
         return redirect('/jornal')
     erro_usuario = request.args.get('erro') == 'usuario_existente'
-    return render_template_string(open('cadastro.html').read(), 
+    return render_template_string(open('/home/leandrogram/Leandrogram/cadastro.html').read(), 
                                   erro_usuario=erro_usuario)
 
 @app.route('/registrar', methods=['POST'])
@@ -126,7 +126,7 @@ def jornal():
     
     nome = session.get('nome', session.get('usuario', 'Usuário'))
     # Renderiza com Jinja
-    html = open('jornal.html').read()
+    html = open('/home/leandrogram/Leandrogram/jornal.html').read()
     return render_template_string(html, nome=nome)
 
 # ==================== ROTAS ANTIGAS ====================
@@ -137,7 +137,7 @@ def admin():
     cursor.execute('SELECT * FROM acessos ORDER BY id DESC')
     acessos = cursor.fetchall()
     conn.close()
-    return render_template_string(open('admin.html').read(), acessos=acessos)
+    return render_template_string(open('/home/leandrogram/Leandrogram/admin.html').read(), acessos=acessos)
 
 # ==================== INICIALIZAÇÃO ====================
 iniciar_banco()
