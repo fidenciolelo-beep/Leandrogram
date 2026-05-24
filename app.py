@@ -170,15 +170,21 @@ def gerar_jornal():
     data_nasc = session.get('data_nascimento', '')
     api_key = os.environ.get('GEMINI_API_KEY')
     
-    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key={api_key}"
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?
+key={api_key}"
     
-    prompt = f"""Gere 5 notícias reais e importantes que aconteceram no dia {data_nasc} ao longo da história. Responda APENAS em JSON válido, sem texto extra, neste formato:
+    prompt = f"""Gere 5 notícias reais e importantes que aconteceram no dia {data_nasc} ao longo da história. 
+Responda APENAS em JSON válido, sem texto extra, neste formato:
 [{{"titulo": "", "resumo": "", "categoria": "Brasil", "fonte": "", "tempo": "{data_nasc}", "curtidas": 120, "url": ""}}]
 Categorias: Tech, Brasil, Esporte, Mundo, Saude"""
 
     body = {"contents": [{"parts": [{"text": prompt}]}]}
     
-    resp = requests.post(url, json=body)
+import time
+time.sleep(2)
+resp = requests.post(url, json=body)
+    
+resp = requests.post(url, json=body)
     texto = resp.json()['candidates'][0]['content']['parts'][0]['text']
     texto = texto.replace('```json', '').replace('```', '').strip()
     noticias = json.loads(texto)
