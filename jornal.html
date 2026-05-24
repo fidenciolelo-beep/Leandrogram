@@ -1,121 +1,393 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jornal - LeandroGram</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            background: #000;
-            color: #e0e0e0;
-            font-family: Arial, sans-serif;
-            min-height: 100vh;
-        }
-        .header {
-            background: #121212;
-            padding: 20px;
-            text-align: center;
-            border-bottom: 1px solid #363636;
-            position: relative;
-        }
-        .logo {
-            font-size: 32px;
-            font-family: cursive;
-            color: #fff;
-            margin-bottom: 5px;
-            animation: brilho 2s infinite alternate;
-        }
-        .welcome {
-            color: #bb86fc;
-            font-size: 18px;
-            margin: 10px 0;
-        }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        .news-area {
-            background: #121212;
-            border: 1px solid #363636;
-            border-radius: 8px;
-            padding: 25px;
-            min-height: 60vh;
-        }
-        button {
-            width: 100%;
-            max-width: 350px;
-            background: linear-gradient(45deg, #833ab4, #fd1d1d, #fcb045);
-            color: white;
-            border: none;
-            padding: 14px;
-            border-radius: 6px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            margin: 20px auto;
-            display: block;
-        }
-        button:hover {
-            transform: scale(1.03);
-        }
-        .logout {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            color: #ff6666;
-            text-decoration: none;
-            font-weight: bold;
-        }
-        @keyframes brilho {
-            from { text-shadow: 0 0 5px #833ab4; }
-            to { text-shadow: 0 0 20px #fd1d1d, 0 0 40px #fcb045; }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LeandroGram — Jornal</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #000;
+      color: #fff;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      max-width: 480px;
+      margin: 0 auto;
+      min-height: 100vh;
+      padding-bottom: 70px;
+    }
+
+    /* HEADER */
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: #000;
+      padding: 14px 16px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 0.5px solid #262626;
+    }
+    .header-logo {
+      font-size: 24px;
+      font-weight: 700;
+      font-family: Georgia, serif;
+      background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .header-icons { display: flex; gap: 16px; }
+    .header-icons i { font-size: 24px; color: #fff; cursor: pointer; }
+
+    /* STORIES */
+    .stories {
+      display: flex;
+      gap: 14px;
+      padding: 14px 16px;
+      overflow-x: auto;
+      border-bottom: 0.5px solid #262626;
+      scrollbar-width: none;
+    }
+    .stories::-webkit-scrollbar { display: none; }
+    .story { display: flex; flex-direction: column; align-items: center; gap: 5px; cursor: pointer; }
+    .story-ring {
+      padding: 2.5px;
+      border-radius: 50%;
+      background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+    }
+    .story-ring.visto { background: #333; }
+    .story-inner {
+      width: 56px; height: 56px;
+      border-radius: 50%;
+      background: #262626;
+      border: 2.5px solid #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      font-weight: 700;
+      color: #fff;
+    }
+    .story-label { font-size: 10px; color: #a8a8a8; white-space: nowrap; max-width: 64px; text-align: center; overflow: hidden; text-overflow: ellipsis; }
+
+    /* FEED */
+    .feed { padding: 0; }
+
+    .post { border-bottom: 0.5px solid #262626; padding: 14px 16px 12px; }
+
+    .post-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+    .post-user { display: flex; align-items: center; gap: 10px; }
+    .post-avatar {
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      padding: 2px;
+      background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+      flex-shrink: 0;
+    }
+    .post-avatar-inner {
+      width: 100%; height: 100%;
+      border-radius: 50%;
+      background: #262626;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 700; color: #fff;
+      border: 2px solid #000;
+    }
+    .post-username { font-size: 13px; font-weight: 600; color: #fff; }
+    .post-source { font-size: 11px; color: #a8a8a8; margin-top: 1px; }
+    .post-menu { font-size: 20px; color: #fff; cursor: pointer; }
+
+    /* CARD DA NOTÍCIA */
+    .post-card {
+      background: #1a1a1a;
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 12px;
+      border: 0.5px solid #2a2a2a;
+    }
+    .post-category {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .8px;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+    .cat-tech    { color: #e6683c; }
+    .cat-brasil  { color: #4ade80; }
+    .cat-esporte { color: #facc15; }
+    .cat-mundo   { color: #60a5fa; }
+    .cat-saude   { color: #f472b6; }
+
+    .post-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: #fff;
+      line-height: 1.45;
+      margin-bottom: 8px;
+    }
+    .post-body {
+      font-size: 13px;
+      color: #a8a8a8;
+      line-height: 1.65;
+    }
+
+    /* AÇÕES */
+    .post-actions { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+    .post-actions-left { display: flex; gap: 16px; }
+    .post-actions i { font-size: 24px; color: #fff; cursor: pointer; transition: transform .1s; }
+    .post-actions i:active { transform: scale(.85); }
+    .post-likes { font-size: 13px; font-weight: 600; color: #fff; }
+    .post-time  { font-size: 11px; color: #a8a8a8; margin-top: 2px; }
+
+    /* BOTÃO GERAR JORNAL */
+    .btn-gerar {
+      margin: 16px;
+      padding: 15px;
+      background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+      border: none;
+      border-radius: 12px;
+      color: #fff;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      width: calc(100% - 32px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      letter-spacing: .3px;
+    }
+    .btn-gerar:active { opacity: .85; }
+
+    /* ESTADO VAZIO */
+    .empty {
+      text-align: center;
+      padding: 60px 24px;
+      color: #a8a8a8;
+    }
+    .empty i { font-size: 48px; margin-bottom: 16px; display: block; }
+    .empty p { font-size: 15px; line-height: 1.6; }
+
+    /* NAV INFERIOR */
+    .nav-bottom {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      max-width: 480px;
+      margin: 0 auto;
+      background: #000;
+      border-top: 0.5px solid #262626;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 10px 16px 14px;
+      z-index: 10;
+    }
+    .nav-bottom a { color: #a8a8a8; text-decoration: none; display: flex; flex-direction: column; align-items: center; }
+    .nav-bottom a.active { color: #fff; }
+    .nav-bottom i { font-size: 24px; }
+    .nav-avatar {
+      width: 26px; height: 26px;
+      border-radius: 50%;
+      padding: 2px;
+      background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .nav-avatar-inner {
+      width: 100%; height: 100%;
+      border-radius: 50%;
+      background: #262626;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px; font-weight: 700; color: #fff;
+      border: 1.5px solid #000;
+    }
+
+    /* LOADING */
+    .loading {
+      text-align: center;
+      padding: 40px;
+      color: #a8a8a8;
+    }
+    .spinner {
+      width: 32px; height: 32px;
+      border: 2px solid #333;
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin .8s linear infinite;
+      margin: 0 auto 12px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* LINK DE NOTICIA */
+    .post-card a { color: inherit; text-decoration: none; }
+    .ler-mais {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: 10px;
+      font-size: 12px;
+      color: #a8a8a8;
+      border: 0.5px solid #333;
+      padding: 5px 12px;
+      border-radius: 20px;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .ler-mais:hover { background: #1a1a1a; }
+  </style>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
 </head>
 <body>
-    <div class="header">
-        <h1 class="logo">LeandroGram</h1>
-        <h2 class="welcome">Bem-vindo, {{ nome }}! 👋</h2>
-        <p>Seu jornal personalizado do dia</p>
-        <a href="/logout" class="logout">Sair</a>
-    </div>
 
-    <div class="container">
-        <div class="news-area" id="jornal-content">
-            <p style="text-align: center; color: #888; margin-top: 50px;">
-                Clique no botão abaixo para gerar seu jornal personalizado
-            </p>
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-logo">LeandroGram</div>
+    <div class="header-icons">
+      <i class="ti ti-heart"></i>
+      <i class="ti ti-send"></i>
+    </div>
+  </div>
+
+  <!-- STORIES / CATEGORIAS -->
+  <div class="stories">
+    <div class="story">
+      <div class="story-ring">
+        <div class="story-inner">{{ nome[0] | upper }}</div>
+      </div>
+      <span class="story-label">Seu jornal</span>
+    </div>
+    <div class="story">
+      <div class="story-ring visto">
+        <div class="story-inner"><i class="ti ti-cpu" style="font-size:20px;"></i></div>
+      </div>
+      <span class="story-label">Tech</span>
+    </div>
+    <div class="story">
+      <div class="story-ring visto">
+        <div class="story-inner"><i class="ti ti-map-pin" style="font-size:20px;"></i></div>
+      </div>
+      <span class="story-label">Brasil</span>
+    </div>
+    <div class="story">
+      <div class="story-ring visto">
+        <div class="story-inner"><i class="ti ti-ball-football" style="font-size:20px;"></i></div>
+      </div>
+      <span class="story-label">Esporte</span>
+    </div>
+    <div class="story">
+      <div class="story-ring visto">
+        <div class="story-inner"><i class="ti ti-world" style="font-size:20px;"></i></div>
+      </div>
+      <span class="story-label">Mundo</span>
+    </div>
+  </div>
+
+  <!-- FEED -->
+  <div class="feed" id="feed">
+
+    {% if noticias %}
+      {% for noticia in noticias %}
+      <div class="post">
+        <div class="post-header">
+          <div class="post-user">
+            <div class="post-avatar">
+              <div class="post-avatar-inner">{{ noticia.categoria[0] | upper }}</div>
+            </div>
+            <div>
+              <div class="post-username">{{ noticia.categoria | lower | replace(' ', '_') }}</div>
+              <div class="post-source">{{ noticia.fonte }}</div>
+            </div>
+          </div>
+          <i class="ti ti-dots post-menu"></i>
         </div>
 
-        <button onclick="gerarJornal()">📬 Gerar meu jornal!</button>
-    </div>
+        <div class="post-card">
+          <div class="post-category cat-{{ noticia.categoria | lower }}">
+            {{ noticia.categoria }} · {{ noticia.tempo }}
+          </div>
+          <div class="post-title">{{ noticia.titulo }}</div>
+          <div class="post-body">{{ noticia.resumo }}</div>
+          {% if noticia.url %}
+          <a href="{{ noticia.url }}" target="_blank" class="ler-mais">
+            <i class="ti ti-external-link" style="font-size:13px;"></i> Ler matéria completa
+          </a>
+          {% endif %}
+        </div>
 
-    <script>
-        function gerarJornal() {
-            const content = document.getElementById('jornal-content');
-            content.innerHTML = `
-                <p style="text-align: center; color: #bb86fc;">
-                    Gerando seu jornal personalizado...<br>
-                    <small>Aguarde um momento</small>
-                </p>
-            `;
-            // Aqui você pode integrar com sua API do Gemini depois
-            setTimeout(() => {
-                content.innerHTML = `
-                    <h2 style="color: #fff; text-align: center;">📰 Seu Jornal Personalizado</h2>
-                    <p style="margin-top: 30px; text-align: center; color: #aaa;">
-                        Aqui aparecerá o conteúdo gerado pelo Gemini.<br>
-                        (Vamos configurar isso em breve)
-                    </p>
-                `;
-            }, 1500);
+        <div class="post-actions">
+          <div class="post-actions-left">
+            <i class="ti ti-heart"></i>
+            <i class="ti ti-message-circle"></i>
+            <i class="ti ti-send"></i>
+          </div>
+          <i class="ti ti-bookmark"></i>
+        </div>
+        <div class="post-likes">{{ noticia.curtidas }} curtidas</div>
+        <div class="post-time">{{ noticia.tempo }}</div>
+      </div>
+      {% endfor %}
+
+    {% else %}
+      <div class="empty">
+        <i class="ti ti-newspaper"></i>
+        <p>Seu jornal ainda não foi gerado hoje.<br>Toque no botão abaixo para criar!</p>
+      </div>
+    {% endif %}
+
+  </div>
+
+  <!-- BOTÃO GERAR -->
+  <button class="btn-gerar" onclick="gerarJornal()">
+    <i class="ti ti-sparkles" style="font-size:18px;"></i>
+    Gerar meu jornal com IA
+  </button>
+
+  <!-- NAV INFERIOR -->
+  <div class="nav-bottom">
+    <a href="/jornal" class="active"><i class="ti ti-news"></i></a>
+    <a href="/feed"><i class="ti ti-home"></i></a>
+    <a href="/buscar"><i class="ti ti-search"></i></a>
+    <a href="/notificacoes"><i class="ti ti-heart"></i></a>
+    <a href="/perfil" class="nav-avatar">
+      <div class="nav-avatar-inner">{{ nome[0] | upper }}</div>
+    </a>
+  </div>
+
+  <script>
+    function gerarJornal() {
+      const btn = document.querySelector('.btn-gerar');
+      btn.innerHTML = '<div class="spinner" style="width:20px;height:20px;margin:0;"></div> Gerando...';
+      btn.disabled = true;
+      window.location.href = '/gerar-jornal';
+    }
+
+    // Curtir ao clicar no coração
+    document.querySelectorAll('.post-actions-left .ti-heart').forEach(icon => {
+      icon.addEventListener('click', function() {
+        const curtido = this.style.color === 'rgb(237, 73, 86)';
+        this.style.color = curtido ? '#fff' : '#ed4956';
+        const likes = this.closest('.post').querySelector('.post-likes');
+        const num = parseInt(likes.textContent);
+        likes.textContent = (curtido ? num - 1 : num + 1) + ' curtidas';
+      });
+    });
+
+    // Salvar ao clicar no bookmark
+    document.querySelectorAll('.ti-bookmark').forEach(icon => {
+      icon.addEventListener('click', function() {
+        const salvo = this.style.color === 'rgb(255, 255, 255)' && this.dataset.salvo === '1';
+        if (this.dataset.salvo === '1') {
+          this.style.color = '#fff';
+          this.dataset.salvo = '0';
+        } else {
+          this.style.color = '#fff';
+          this.dataset.salvo = '1';
+          this.style.fontVariationSettings = '"FILL" 1';
         }
-    </script>
+      });
+    });
+  </script>
+
 </body>
 </html>

