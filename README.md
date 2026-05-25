@@ -27,3 +27,19 @@ python app.py
 
 ## 👨‍💻 Desenvolvedor
 Leandro — aprendendo desenvolvimento web do zero
+
+## 🗄️ Banco de Dados — SQL
+
+Comandos aprendidos:
+
+- `SELECT * FROM tabela` — buscar todos os dados
+- `SELECT coluna FROM tabela` — buscar colunas específicas
+- `WHERE` — filtrar resultados
+- `COUNT(*)` — contar registros
+- `ORDER BY coluna DESC` — ordenar resultados
+- `LIMIT 3` — limitar quantidade
+- `INSERT INTO` — inserir dados
+- `UPDATE SET` — atualizar dados
+- `DELETE FROM` — apagar dados
+
+Conceito: **CRUD** — Create, Read, Update, Delete
