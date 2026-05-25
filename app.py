@@ -185,9 +185,12 @@ time.sleep(2)
 resp = requests.post(url, json=body)
     
 resp = requests.post(url, json=body)
-    texto = resp.json()['candidates'][0]['content']['parts'][0]['text']
-    texto = texto.replace('```json', '').replace('```', '').strip()
-    noticias = json.loads(texto)
-    
-    session['noticias'] = noticias
-    return redirect('/jornal')
+resposta = resp.json()
+
+if 'candidates' not in resposta:
+    print('Erro da API:', resposta)
+    return redirect('/jornal?erro=api')
+
+texto = resposta['candidates'][0]['content']['parts'][0]['text']
+texto = texto.replace('```json', '').replace('```', '').strip()
+noticias = json.loads(texto)
