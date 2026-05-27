@@ -58,3 +58,15 @@ Conceitos aprendidos:
 - `await` — espera a resposta do servidor antes de continuar
 - Rotas Flask que consultam o banco de dados
 - Fluxo completo: usuário → JavaScript → Flask → SQLite → resposta
+
+
+## 🤖 Projeto Bônus: Monitor Automático de Bitcoin (SQLite + Automação)
+
+Desenvolvi também um robô de automação em segundo plano que roda direto no Termux. Ele monitora o valor do Bitcoin e cria um histórico cronológico local.
+
+### O que foi aplicado:
+- **`schedule`** e **`time`**: Para criar um loop estável de checagem a cada 10 segundos.
+- **`requests`**: Com cabeçalhos customizados (`headers`) para simular um navegador e evitar bloqueios.
+- **`datetime`**: Para registrar a estampa de tempo real (`data_hora`) de cada captura.
+- **Tratamento de Tuplas**: Passagem segura de parâmetros `(preco, agora)` para prevenir falhas de tipos e injeções no SQLite.
+
