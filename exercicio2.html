@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Consulta de Usuário</title>
+</head>
+<body>
+
+    <h2>Consultar usuário no banco</h2>
+    <input type="text" id="nome" placeholder="Digite um nome">
+    <button onclick="consultar()">Consultar</button>
+    <p id="resultado"></p>
+
+    <script>
+        async function consultar() {
+            let nome = document.getElementById('nome').value
+            let resposta = await fetch('/checar?nome=' + nome)
+            let texto = await resposta.text()
+            document.getElementById('resultado').innerHTML = texto
+        }
+    </script>
+
+</body>
+</html>

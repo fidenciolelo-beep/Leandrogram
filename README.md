@@ -43,3 +43,18 @@ Comandos aprendidos:
 - `DELETE FROM` — apagar dados
 
 Conceito: **CRUD** — Create, Read, Update, Delete
+
+## 🔗 JavaScript + Flask + Banco de Dados
+
+Aprendi a conectar as três camadas de um sistema web:
+
+- **HTML** — formulário para o usuário digitar
+- **JavaScript** — envia a consulta para o servidor com `fetch`
+- **Flask** — recebe a requisição e processa
+- **SQLite** — consulta o banco e retorna a resposta
+
+Conceitos aprendidos:
+- `fetch` — faz requisições HTTP pelo JavaScript
+- `await` — espera a resposta do servidor antes de continuar
+- Rotas Flask que consultam o banco de dados
+- Fluxo completo: usuário → JavaScript → Flask → SQLite → resposta
